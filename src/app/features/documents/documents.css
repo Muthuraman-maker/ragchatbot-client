@@ -1,0 +1,87 @@
+.loading{
+
+    display:flex;
+
+    justify-content:center;
+
+    padding:40px;
+
+}
+
+.documents-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+
+    gap:25px;
+
+}
+
+.document-card{
+
+    border-radius:18px;
+
+    transition:.3s;
+
+    border:1px solid #E2E8F0;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.document-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.header{
+
+    margin-bottom:15px;
+
+}
+
+.header h3{
+
+    margin:0;
+
+    color:#1E293B;
+
+}
+
+.details{
+
+    color:#64748B;
+
+    line-height:1.8;
+
+}
+
+.actions{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:25px;
+
+}
+
+.empty-state{
+
+    text-align:center;
+
+    padding:60px;
+
+    color:#64748B;
+
+}
+
+.empty-state .material-icons{
+
+    font-size:80px;
+
+    color:#CBD5E1;
+
+}

@@ -1,0 +1,49 @@
+.upload-area{
+
+    border:3px dashed #2563EB;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    padding:60px;
+
+    background:white;
+
+    transition:.3s;
+
+}
+
+.upload-area:hover{
+
+    background:#F8FAFC;
+
+}
+
+.cloud{
+
+    font-size:80px;
+
+}
+
+.selected{
+
+    margin:25px;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    color:#2563EB;
+
+}
+
+.spinner{
+
+    margin-top:20px;
+
+    display:flex;
+
+    justify-content:center;
+
+}

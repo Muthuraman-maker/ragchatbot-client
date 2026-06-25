@@ -1,1 +1,123 @@
-<p>documents works!</p>
+@if(loading){
+
+<div class="loading">
+
+    <mat-spinner diameter="45"></mat-spinner>
+
+</div>
+
+}
+
+@else if(documents.length===0){
+
+<div class="empty-state">
+
+    <span class="material-icons">
+
+        description
+
+    </span>
+
+    <h3>
+
+        No PDF uploaded yet
+
+    </h3>
+
+    <p>
+
+        Upload your first PDF to start chatting.
+
+    </p>
+
+</div>
+
+}
+
+@else{
+
+<div class="documents-grid">
+
+    @for(document of documents;track document.documentId){
+
+    <mat-card class="document-card">
+
+        <mat-card-content>
+
+            <div class="header">
+
+                <div>
+
+                    <h3>
+
+                        📄 {{document.fileName}}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div class="details">
+
+                <p>
+
+                    <strong>Uploaded</strong>
+
+                    {{document.uploadedAt | date:'medium'}}
+
+                </p>
+
+                <p>
+
+                    <strong>Chunks</strong>
+
+                    {{document.chunkCount}}
+
+                </p>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                        mat-raised-button
+                        color="primary"
+                        (click)="chat(document.documentId)">
+
+                    <mat-icon>
+
+                        smart_toy
+
+                    </mat-icon>
+
+                    Chat
+
+                </button>
+
+                <button
+                        mat-raised-button
+                        color="warn"
+                        (click)="delete(document.documentId)">
+
+                    <mat-icon>
+
+                        delete
+
+                    </mat-icon>
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        </mat-card-content>
+
+    </mat-card>
+
+    }
+
+</div>
+
+}
