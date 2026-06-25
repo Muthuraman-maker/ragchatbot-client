@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs';
 
+import { DocumentMetadata } from '../models/document-metadata';
+
 @Injectable({
-  providedIn:'root'
+  providedIn: 'root'
 })
-export class SelectedDocumentService{
+export class SelectedDocumentService {
 
-    private selectedDocument=
-        new BehaviorSubject<string>("");
+  private selectedDocumentSubject =
+    new BehaviorSubject<DocumentMetadata | null>(null);
 
-    selectedDocument$=
-        this.selectedDocument.asObservable();
+  selectedDocument$ =
+    this.selectedDocumentSubject.asObservable();
 
-    setDocument(documentId:string){
+  setDocument(document: DocumentMetadata) {
 
-        this.selectedDocument.next(documentId);
+    this.selectedDocumentSubject.next(document);
 
-    }
+  }
 
 }

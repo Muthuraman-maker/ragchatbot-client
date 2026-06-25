@@ -39,6 +39,8 @@ export class Documents implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
+  selectedDocumentId = "";
+
   documents: DocumentMetadata[] = [];
 
   loading = false;
@@ -47,13 +49,15 @@ export class Documents implements OnInit, OnDestroy {
 
     this.loadDocuments();
 
-    this.documentEventService.documentUploaded$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
+    this.selectedDocumentService
+    .selectedDocument$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(document => {
 
-        this.loadDocuments();
+        this.selectedDocumentId =
+            document?.documentId ?? "";
 
-      });
+    });
 
   }
 
@@ -112,19 +116,18 @@ export class Documents implements OnInit, OnDestroy {
 
   }
 
-  chat(documentId: string) {
+selectDocument(documentData: DocumentMetadata) {
 
-    this.selectedDocumentService
-      .setDocument(documentId);
+    this.selectedDocumentId = documentData.documentId;
 
+    this.selectedDocumentService.setDocument(documentData);
     document
-      .getElementById("chat-section")
-      ?.scrollIntoView({
-        behavior: 'smooth'
-      });
+        .getElementById('chat-section')
+        ?.scrollIntoView({
+            behavior: 'smooth'
+        });
 
-  }
-
+}
   ngOnDestroy(): void {
 
     this.destroy$.next();

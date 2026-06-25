@@ -40,82 +40,79 @@
 
     @for(document of documents;track document.documentId){
 
-    <mat-card class="document-card">
+    <mat-card
+    class="document-card"
+    [class.selected]="document.documentId === selectedDocumentId"
+    (click)="selectDocument(document)">
 
-        <mat-card-content>
+    <mat-card-content>
 
-            <div class="header">
+        <div class="header">
 
-                <div>
+            <div>
 
-                    <h3>
+                <h3>
 
-                        📄 {{document.fileName}}
+                    📄 {{ document.fileName }}
 
-                    </h3>
+                </h3>
+
+                @if(document.documentId===selectedDocumentId){
+
+                <div class="selected-tag">
+
+                    ✓ Currently Selected
 
                 </div>
 
-            </div>
-
-            <div class="details">
-
-                <p>
-
-                    <strong>Uploaded</strong>
-
-                    {{document.uploadedAt | date:'medium'}}
-
-                </p>
-
-                <p>
-
-                    <strong>Chunks</strong>
-
-                    {{document.chunkCount}}
-
-                </p>
+                }
 
             </div>
 
-            <div class="actions">
+        </div>
 
-                <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="chat(document.documentId)">
+        <div class="details">
 
-                    <mat-icon>
+            <p>
 
-                        smart_toy
+                <strong>Uploaded</strong>
 
-                    </mat-icon>
+                {{ document.uploadedAt | date:'medium' }}
 
-                    Chat
+            </p>
 
-                </button>
+            <p>
 
-                <button
-                        mat-raised-button
-                        color="warn"
-                        (click)="delete(document.documentId)">
+                <strong>Chunks</strong>
 
-                    <mat-icon>
+                {{ document.chunkCount }}
 
-                        delete
+            </p>
 
-                    </mat-icon>
+        </div>
 
-                    Delete
+        <div class="actions">
 
-                </button>
+            <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="delete(document.documentId); $event.stopPropagation()">
 
-            </div>
+                <mat-icon>
 
-        </mat-card-content>
+                    delete
 
-    </mat-card>
+                </mat-icon>
 
+                Delete
+
+            </button>
+
+        </div>
+
+    </mat-card-content>
+
+</mat-card>
     }
 
 </div>

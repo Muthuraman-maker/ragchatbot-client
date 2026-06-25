@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -6,14 +6,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ChatService } from '../../core/services/chat.service';
 import { SelectedDocumentService } from '../../core/services/selected-document.service';
 
 import { ChatRequest } from '../../core/models/chat-request';
-import { ChatResponse } from '../../core/models/chat-response';
+import { ChatMessage } from '../../core/models/chat-message';
+import { DocumentMetadata } from '../../core/models/document-metadata';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'app-chat',
@@ -25,12 +26,16 @@ import { ChatResponse } from '../../core/models/chat-response';
     MatCardModule,
     MatRadioModule,
     MatInputModule,
-    MatProgressSpinnerModule
-  ],
+    MatIconModule
+],
   templateUrl: './chat.html',
   styleUrl: './chat.css'
 })
 export class ChatComponent implements OnInit {
+
+  @ViewChild('chatHistory')
+
+  chatHistory!: ElementRef;
 
   private chatService = inject(ChatService);
 
@@ -38,13 +43,14 @@ export class ChatComponent implements OnInit {
 
   private snackBar = inject(MatSnackBar);
 
-  documentId = "";
+  selectedDocument?: DocumentMetadata;
 
   question = "";
 
   searchMode = "PDF_ONLY";
 
-  response?: ChatResponse;
+  messages: ChatMessage[] = [];
+  private messageCounter = 0;
 
   loading = false;
 
@@ -52,9 +58,9 @@ export class ChatComponent implements OnInit {
 
     this.selectedDocumentService
       .selectedDocument$
-      .subscribe(id => {
+      .subscribe(document => {
 
-        this.documentId = id;
+        this.selectedDocument = document!;
 
       });
 
@@ -62,43 +68,73 @@ export class ChatComponent implements OnInit {
 
   askAI() {
 
-    if (!this.documentId) {
+    if (!this.selectedDocument) {
 
       this.snackBar.open(
         "Please select a document.",
         "Close",
         {
-          duration:3000
+          duration: 3000
         });
 
       return;
-
     }
 
     if (!this.question.trim()) {
 
-      this.snackBar.open(
-        "Please enter a question.",
-        "Close",
-        {
-          duration:3000
-        });
-
       return;
-
     }
 
-    this.loading = true;
+    const question = this.question;
+
+    this.question = "";
+
+    /* USER MESSAGE */
+
+    this.messages.push({
+
+      id: ++this.messageCounter,
+
+      sender: 'USER',
+
+      message: question,
+
+      timestamp: new Date()
+
+    });
+
+    /* AI THINKING */
+
+    const aiMessage: ChatMessage = {
+
+      id: ++this.messageCounter,
+
+      sender: 'AI',
+
+      message: "Thinking...",
+
+      timestamp: new Date(),
+
+      loading: true
+
+    };
+
+    this.messages.push(aiMessage);
+
+    this.scrollToBottom();
 
     const request: ChatRequest = {
 
-      documentId: this.documentId,
+      documentId:
+        this.selectedDocument.documentId,
 
-      question: this.question,
+      question: question,
 
       searchMode: this.searchMode
 
     };
+
+    this.loading = true;
 
     this.chatService
       .askQuestion(request)
@@ -106,13 +142,32 @@ export class ChatComponent implements OnInit {
 
         next: response => {
 
-          this.response = response;
+          aiMessage.loading = false;
+
+          aiMessage.message =
+            response.answer;
+
+          aiMessage.pdfContextUsed =
+            response.pdfContextUsed;
+
+          aiMessage.internetContextUsed =
+            response.internetContextUsed;
+
+          aiMessage.pdfChunksRetrieved =
+            response.pdfChunksRetrieved;
 
           this.loading = false;
+
+          this.scrollToBottom();
 
         },
 
         error: () => {
+
+          aiMessage.loading = false;
+
+          aiMessage.message =
+            "Unable to get AI response.";
 
           this.loading = false;
 
@@ -121,5 +176,57 @@ export class ChatComponent implements OnInit {
       });
 
   }
+  scrollToBottom() {
 
+    setTimeout(() => {
+
+      if (this.chatHistory) {
+
+        this.chatHistory
+          .nativeElement
+          .scrollTop =
+          this.chatHistory
+            .nativeElement
+            .scrollHeight;
+
+      }
+
+    });
+
+  }
+  copy(text: string) {
+
+    navigator.clipboard.writeText(text);
+
+    this.snackBar.open(
+
+      "Copied",
+
+      "Close",
+
+      {
+
+        duration: 2000
+
+      });
+
+  }
+  clearConversation(){
+
+    this.messages=[];
+
+}
+send(event: Event) {
+
+    const keyboardEvent = event as KeyboardEvent;
+
+    if (!keyboardEvent.shiftKey) {
+
+        event.preventDefault();
+
+        this.askAI();
+
+    }
+
+}
 }

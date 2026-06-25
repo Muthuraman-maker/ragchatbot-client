@@ -1,121 +1,246 @@
-<mat-card>
+<div class="chat-container">
 
-    <mat-card-content>
+    <div class="chat-header">
 
-        <mat-form-field appearance="outline" class="full-width">
+        <div>
 
-            <mat-label>
+            <h2>🤖 AI Assistant</h2>
 
-                Ask your question
+            <p>Ask questions from your uploaded knowledge base.</p>
 
-            </mat-label>
+        </div>
 
-            <textarea
-                    matInput
-                    rows="4"
-                    [(ngModel)]="question">
+    </div>
 
-            </textarea>
+    @if(selectedDocument){
 
-        </mat-form-field>
+    <div class="selected-document">
 
-        <mat-radio-group
-                [(ngModel)]="searchMode">
+        <div class="document-icon">
 
-            <mat-radio-button value="PDF_ONLY">
+            📄
 
-                PDF Only
+        </div>
 
-            </mat-radio-button>
+        <div>
 
-            <mat-radio-button value="INTERNET_ONLY">
+            <div class="document-name">
 
-                Internet Only
-
-            </mat-radio-button>
-
-            <mat-radio-button value="PDF_AND_INTERNET">
-
-                PDF + Internet
-
-            </mat-radio-button>
-
-        </mat-radio-group>
-
-        <br><br>
-
-        <button
-                mat-raised-button
-                color="primary"
-                (click)="askAI()"
-                [disabled]="loading">
-
-            Ask AI
-
-        </button>
-
-        @if(loading){
-
-            <div class="spinner">
-
-                <mat-spinner diameter="40"></mat-spinner>
+                {{selectedDocument.fileName}}
 
             </div>
 
+            <div class="document-info">
+
+                {{selectedDocument.chunkCount}} Chunks
+
+                •
+
+                {{selectedDocument.uploadedAt | date:'mediumDate'}}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    }
+
+    <div
+            class="chat-history"
+            #chatHistory>
+
+        @if(messages.length===0){
+
+        <div class="welcome">
+
+            <div class="welcome-icon">
+
+                🤖
+
+            </div>
+
+            <h3>
+
+                Welcome
+
+            </h3>
+
+            <p>
+
+                Select a document and ask your first question.
+
+            </p>
+
+        </div>
+
         }
 
-        @if(response){
+        @else{
 
-            <div class="response-card">
+        @for(message of messages;track message.id){
 
-                <h3>
+        <div
+                class="message"
+                [class.user]="message.sender==='USER'"
+                [class.ai]="message.sender==='AI'">
 
-                    AI Response
+            <div class="avatar">
 
-                </h3>
+                {{message.sender==='USER'?'👤':'🤖'}}
 
-                <p>
+            </div>
 
-                    {{response.answer}}
+            <div class="bubble">
 
-                </p>
+                @if(message.loading){
 
-                <div class="chips">
+                <div class="typing">
 
-                    @if(response.pdfContextUsed){
+                    <span></span>
 
-                        <span class="chip success">
+                    <span></span>
 
-                            📄 PDF Used
+                    <span></span>
 
-                        </span>
+                </div>
+
+                }
+
+                @else{
+
+                <div class="message-text">
+
+                    {{message.message}}
+
+                </div>
+
+                }
+
+                @if(message.sender==='AI' && !message.loading){
+
+                <div class="meta">
+
+                    @if(message.pdfContextUsed){
+
+                    <span class="badge pdf">
+
+                        📄 PDF
+
+                    </span>
 
                     }
 
-                    @if(response.internetContextUsed){
+                    @if(message.internetContextUsed){
 
-                        <span class="chip info">
+                    <span class="badge internet">
 
-                            🌐 Internet Used
+                        🌐 Internet
 
-                        </span>
+                    </span>
 
                     }
 
-                    <span class="chip">
+                    <span class="badge">
 
-                        Retrieved Chunks :
-
-                        {{response.pdfChunksRetrieved}}
+                        {{message.pdfChunksRetrieved}} Chunks
 
                     </span>
 
                 </div>
 
+                <div class="copy">
+
+                    <button
+                            mat-button
+                            color="primary"
+                            (click)="copy(message.message)">
+
+                        Copy
+
+                    </button>
+
+                </div>
+
+                }
+
             </div>
+
+        </div>
 
         }
 
-    </mat-card-content>
+        }
 
-</mat-card>
+    </div>
+
+    <div class="chat-footer">
+
+        <div class="toolbar">
+
+            <button
+                    mat-stroked-button
+                    color="warn"
+                    (click)="clearConversation()">
+
+                Clear Conversation
+
+            </button>
+
+        </div>
+
+        <mat-form-field
+                appearance="outline"
+                class="question-box">
+
+            <textarea
+                    matInput
+                    rows="3"
+                    placeholder="Ask anything..."
+                    [(ngModel)]="question"
+                    (keydown.enter)="send($event)">
+
+            </textarea>
+
+        </mat-form-field>
+
+        <div class="bottom">
+
+            <mat-radio-group
+                    [(ngModel)]="searchMode">
+
+                <mat-radio-button value="PDF_ONLY">
+
+                    PDF Only
+
+                </mat-radio-button>
+
+                <mat-radio-button value="INTERNET_ONLY">
+
+                    Internet Only
+
+                </mat-radio-button>
+
+                <mat-radio-button value="PDF_AND_INTERNET">
+
+                    PDF + Internet
+
+                </mat-radio-button>
+
+            </mat-radio-group>
+
+            <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="askAI()"
+                    [disabled]="loading">
+
+                Ask AI
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
