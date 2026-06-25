@@ -1,0 +1,15 @@
+h3{
+
+    color:#2563EB;
+
+    margin-top:15px;
+
+    word-break:break-word;
+
+}
+
+mat-dialog-content{
+
+    min-width:350px;
+
+}

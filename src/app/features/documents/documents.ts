@@ -5,7 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
 
+import { DeleteConfirmDialogComponent } from '../../shared/dialogs/delete-confirm-dialog';
 import { Subject, takeUntil } from 'rxjs';
 
 import { DocumentService } from '../../core/services/document.service';
@@ -28,6 +30,8 @@ import { DocumentMetadata } from '../../core/models/document-metadata';
   styleUrl: './documents.css'
 })
 export class Documents implements OnInit, OnDestroy {
+
+  private dialog = inject(MatDialog);
 
   private documentService = inject(DocumentService);
 
@@ -87,35 +91,69 @@ export class Documents implements OnInit, OnDestroy {
 
   }
 
-  delete(documentId: string) {
+  delete(document: DocumentMetadata) {
 
-    if (!confirm("Delete this document?")) {
+    const dialogRef = this.dialog.open(
 
-      return;
+        DeleteConfirmDialogComponent,
 
-    }
+        {
 
-    this.documentService
-      .deleteDocument(documentId)
-      .subscribe({
+            width: '420px',
 
-        next: response => {
+            disableClose: true,
 
-          this.snackBar.open(
-            response,
-            "Close",
-            {
-              duration: 3000
-            });
+            data: {
 
-          this.loadDocuments();
+                fileName: document.fileName
+
+            }
 
         }
 
-      });
+    );
 
-  }
+    dialogRef.afterClosed().subscribe(result => {
 
+        if (!result) {
+
+            return;
+
+        }
+
+        this.documentService
+            .deleteDocument(document.documentId)
+            .subscribe({
+
+                next: message => {
+
+                    this.snackBar.open(
+
+                        message,
+
+                        "Close",
+
+                        {
+
+                            duration:3000
+
+                        });
+
+                    if(this.selectedDocumentId===document.documentId){
+
+                        this.selectedDocumentId="";
+
+                    }
+
+                    this.loadDocuments();
+
+                }
+
+            });
+
+    });
+
+}
 selectDocument(documentData: DocumentMetadata) {
 
     this.selectedDocumentId = documentData.documentId;
