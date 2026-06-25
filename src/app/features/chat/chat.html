@@ -1,1 +1,121 @@
-<p>chat works!</p>
+<mat-card>
+
+    <mat-card-content>
+
+        <mat-form-field appearance="outline" class="full-width">
+
+            <mat-label>
+
+                Ask your question
+
+            </mat-label>
+
+            <textarea
+                    matInput
+                    rows="4"
+                    [(ngModel)]="question">
+
+            </textarea>
+
+        </mat-form-field>
+
+        <mat-radio-group
+                [(ngModel)]="searchMode">
+
+            <mat-radio-button value="PDF_ONLY">
+
+                PDF Only
+
+            </mat-radio-button>
+
+            <mat-radio-button value="INTERNET_ONLY">
+
+                Internet Only
+
+            </mat-radio-button>
+
+            <mat-radio-button value="PDF_AND_INTERNET">
+
+                PDF + Internet
+
+            </mat-radio-button>
+
+        </mat-radio-group>
+
+        <br><br>
+
+        <button
+                mat-raised-button
+                color="primary"
+                (click)="askAI()"
+                [disabled]="loading">
+
+            Ask AI
+
+        </button>
+
+        @if(loading){
+
+            <div class="spinner">
+
+                <mat-spinner diameter="40"></mat-spinner>
+
+            </div>
+
+        }
+
+        @if(response){
+
+            <div class="response-card">
+
+                <h3>
+
+                    AI Response
+
+                </h3>
+
+                <p>
+
+                    {{response.answer}}
+
+                </p>
+
+                <div class="chips">
+
+                    @if(response.pdfContextUsed){
+
+                        <span class="chip success">
+
+                            📄 PDF Used
+
+                        </span>
+
+                    }
+
+                    @if(response.internetContextUsed){
+
+                        <span class="chip info">
+
+                            🌐 Internet Used
+
+                        </span>
+
+                    }
+
+                    <span class="chip">
+
+                        Retrieved Chunks :
+
+                        {{response.pdfChunksRetrieved}}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        }
+
+    </mat-card-content>
+
+</mat-card>

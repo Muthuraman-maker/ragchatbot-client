@@ -1,1 +1,69 @@
-<p>upload works!</p>
+<div class="upload-area">
+
+    <input
+            hidden
+            #fileInput
+            type="file"
+            accept=".pdf"
+            (change)="onFileSelected($event)">
+
+    <div class="cloud">
+
+        ☁️
+
+    </div>
+
+    <h2>
+
+        Drag & Drop PDF Here
+
+    </h2>
+
+    <p>
+
+        or
+
+    </p>
+
+    <button
+            mat-raised-button
+            color="primary"
+            (click)="chooseFile()">
+
+        Select PDF
+
+    </button>
+
+    @if(selectedFile){
+
+        <div class="selected">
+
+            📄 {{selectedFile.name}}
+
+        </div>
+
+    }
+
+    <br>
+
+    <button
+            mat-raised-button
+            color="accent"
+            [disabled]="uploading"
+            (click)="upload()">
+
+        Upload
+
+    </button>
+
+    @if(uploading){
+
+        <div class="spinner">
+
+            <mat-spinner diameter="40"></mat-spinner>
+
+        </div>
+
+    }
+
+</div>
