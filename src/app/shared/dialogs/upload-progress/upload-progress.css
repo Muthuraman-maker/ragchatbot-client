@@ -1,0 +1,31 @@
+.steps{
+
+    margin-top:25px;
+
+}
+
+.step{
+
+    padding:10px 0;
+
+    font-size:15px;
+
+    color:#64748B;
+
+}
+
+.completed{
+
+    color:#16A34A;
+
+    font-weight:600;
+
+}
+
+.active{
+
+    color:#2563EB;
+
+    font-weight:600;
+
+}

@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DocumentEventService } from '../../core/services/document-event.service';
 import { DocumentService } from '../../core/services/document.service';
+import { MatDialog } from '@angular/material/dialog';
+import { UploadProgressDialog } from '../../shared/dialogs/upload-progress/upload-progress';
 @Component({
   selector: 'app-upload',
   standalone: true,
@@ -30,6 +32,8 @@ import { DocumentService } from '../../core/services/document.service';
 export class Upload {
   @ViewChild('fileInput')
   fileInput!: ElementRef<HTMLInputElement>;
+
+  private dialog = inject(MatDialog);
 
   private documentService = inject(DocumentService);
 
@@ -74,11 +78,53 @@ export class Upload {
 
     this.uploading = true;
 
+    const dialogRef =
+      this.dialog.open(
+
+        UploadProgressDialog,
+
+        {
+
+          disableClose: true,
+
+          width: '500px'
+
+        }
+
+      );
+
+    const dialog =
+      dialogRef.componentInstance;
+
+    let step = 0;
+
+    const timer = setInterval(() => {
+
+      if (step < 5) {
+
+        dialog.currentStep = step;
+
+        step++;
+
+      }
+
+    }, 900);
+
     this.documentService
       .upload(this.selectedFile)
       .subscribe({
 
         next: response => {
+
+          clearInterval(timer);
+
+          dialog.currentStep = 5;
+
+          setTimeout(() => {
+
+            dialogRef.close();
+
+          }, 500);
 
           this.uploading = false;
 
@@ -97,7 +143,11 @@ export class Upload {
 
         error: () => {
 
-          this.uploading = false;
+          clearInterval(timer);
+
+dialogRef.close();
+
+this.uploading=false;
 
           this.snackBar.open(
             "Upload Failed",

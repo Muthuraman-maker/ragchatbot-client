@@ -53,18 +53,26 @@ export class Documents implements OnInit, OnDestroy {
 
     this.loadDocuments();
 
+    this.documentEventService
+        .documentUploaded$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+
+            this.loadDocuments();
+
+        });
+
     this.selectedDocumentService
-    .selectedDocument$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(document => {
+        .selectedDocument$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(document => {
 
-        this.selectedDocumentId =
-            document?.documentId ?? "";
+            this.selectedDocumentId =
+                document?.documentId ?? "";
 
-    });
+        });
 
-  }
-
+}
   loadDocuments() {
 
     this.loading = true;

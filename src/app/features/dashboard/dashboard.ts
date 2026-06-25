@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { SelectedDocumentComponent } from '../selected-document/selected-document';
 import { Upload } from '../upload/upload';
 import { ChatComponent } from '../chat/chat';
 import { Documents } from '../documents/documents';
@@ -12,7 +12,8 @@ import { Documents } from '../documents/documents';
     CommonModule,
     Upload,
     Documents,
-    ChatComponent
+    ChatComponent,
+    SelectedDocumentComponent
 ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'

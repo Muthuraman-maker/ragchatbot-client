@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>
+
+🤖 AI Processing Document
+
+</h2>
+
+<mat-dialog-content>
+
+    <mat-progress-bar
+        mode="indeterminate">
+
+    </mat-progress-bar>
+
+    <div class="steps">
+
+        @for(step of steps;track $index){
+
+        <div
+            class="step"
+            [class.completed]="$index<currentStep"
+            [class.active]="$index===currentStep">
+
+            @if($index<currentStep){
+
+            ✅
+
+            }
+
+            @else if($index===currentStep){
+
+            ⏳
+
+            }
+
+            @else{
+
+            ○
+
+            }
+
+            {{step}}
+
+        </div>
+
+        }
+
+    </div>
+
+</mat-dialog-content>

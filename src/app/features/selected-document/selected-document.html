@@ -1,0 +1,79 @@
+@if(selectedDocument){
+
+<div class="panel">
+
+    <div class="header">
+
+        📄 Selected Document
+
+    </div>
+
+    <div class="filename">
+
+        {{selectedDocument.fileName}}
+
+    </div>
+
+    <div class="row">
+
+        <span>Document ID</span>
+
+        <strong>{{selectedDocument.documentId}}</strong>
+
+    </div>
+
+    <div class="row">
+
+        <span>Chunks</span>
+
+        <strong>{{selectedDocument.chunkCount}}</strong>
+
+    </div>
+
+    <div class="row">
+
+        <span>Uploaded</span>
+
+        <strong>
+
+            {{selectedDocument.uploadedAt | date:'medium'}}
+
+        </strong>
+
+    </div>
+
+    <div class="status">
+
+        🟢 Ready for AI Search
+
+    </div>
+
+</div>
+
+}
+
+@else{
+
+<div class="empty">
+
+    <div class="icon">
+
+        📄
+
+    </div>
+
+    <h3>
+
+        No Document Selected
+
+    </h3>
+
+    <p>
+
+        Click a document card to start chatting.
+
+    </p>
+
+</div>
+
+}

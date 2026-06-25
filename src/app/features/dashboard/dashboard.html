@@ -1,14 +1,9 @@
 <div class="dashboard-container">
-
     <header class="header">
 
         <div>
 
-            <h1>
-
-                🤖 AI PDF Search Assistant
-
-            </h1>
+            <h1>🤖 AI PDF Search Assistant</h1>
 
             <p>
 
@@ -19,76 +14,61 @@
 
         </div>
 
-        <div class="company">
-
-            TechTobeKnown
-
-        </div>
-
     </header>
 
-    <section class="content">
+    <div class="top-grid">
 
-        <div class="dashboard-card">
+        <div>
 
-            <h2>
+            <div class="dashboard-card">
 
-                <span class="material-icons">
+                <h2>
 
-                    upload_file
+                    Upload PDF
 
-                </span>
+                </h2>
 
-                Upload PDF
-
-            </h2>
-
-            <app-upload></app-upload>
-
-        </div>
-
-        <div class="dashboard-card">
-
-            <h2>
-
-                <span class="material-icons">
-
-                    folder
-
-                </span>
-
-                Uploaded Documents
-
-            </h2>
-
-            <app-documents></app-documents>
-
-        </div>
-
-        <div class="dashboard-card">
-
-            <h2>
-
-                <span class="material-icons">
-
-                    smart_toy
-
-                </span>
-
-                AI Chat
-
-            </h2>
-
-            <div id="chat-section">
-
-                <app-chat>
-
-                </app-chat>
+                <app-upload></app-upload>
 
             </div>
 
         </div>
 
-    </section>
+        <div>
 
+            <app-selected-document>
+
+            </app-selected-document>
+
+        </div>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        <h2>
+
+            Uploaded Documents
+
+        </h2>
+
+        <app-documents>
+
+        </app-documents>
+
+    </div>
+
+    <div id="chat-section" class="dashboard-card">
+
+        <h2>
+
+            AI Chat
+
+        </h2>
+
+        <app-chat>
+
+        </app-chat>
+
+    </div>
 </div>
